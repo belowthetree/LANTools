@@ -1,6 +1,7 @@
 package NetworkManager
 
 import (
+	"bytes"
 	"fmt"
 	"hash/crc32"
 	"io"
@@ -41,30 +42,62 @@ func checkSendErr(err error) bool {
 // 功能函数
 // 接收文件字节序列
 func ReceiveBytes(conn *net.TCPConn) ([]byte, bool) {
-	data := make([]byte, 65)
+	//if n > 64 {
+	//	tmp := make([]byte, n - 64)
+	//	_, _ = conn.Read(tmp)
+	//	for _, i := range tmp{
+	//		data = append(data, i)
+	//	}
+	//}
+	data := make([]byte, 64)
 	n, err := conn.Read(data)
-	if err == io.EOF{
-		return nil, true
-	}
-	if checkReceiveErr(err){
-		// 采用 CRC32 8位累加和进行验证
-		if !checkCRC32(data[:n]){
-			var tmp []byte
-			tmp = []byte("no")
-			fmt.Println("数据验证错误")
-			_, _ =conn.Write(tmp)
-			return nil, false
+	if err != nil{
+		if err == io.EOF{
+			return nil, true
 		}
-	}else{
+		checkReceiveErr(err)
 		return nil, false
 	}
-	return data[:n-1], true
+	//n := int(data[0])
+	return data[:n], true
+	//if checkReceiveErr(err){
+	//	//return data[1:n+1], true
+	//	//采用 CRC32 8位累加和进行验证
+	//		//var tmp []byte
+	//		//tmp = []byte("no")
+	//		//fmt.Println("数据验证错误")
+	//		//_, _ =conn.Write(tmp)
+	//	var tmp []byte
+	//	tmp = []byte("yes")
+	//	_, _ =conn.Write(tmp)
+	//	return data[1:n+1], true
+	//}else{
+	//	var tmp []byte
+	//	tmp = []byte("no")
+	//	_, _ =conn.Write(tmp)
+	//	//return nil, false
+	//}
+	//return nil, false
 }
 // 发送字节序列
 func SendBytes(data []byte, conn *net.TCPConn) bool {
-	res := crc(data)
-	data = append(data, res)
-	_, err := conn.Write(data)
+	var buffer bytes.Buffer
+	buffer.WriteByte(byte(len(data)))
+	if len(data) > 64{
+		fmt.Println("文件大小:", len(data))
+		fmt.Println(len(data))
+	}
+	buffer.Write(data)
+	sender := make([]byte, 65)
+	_,_ = buffer.Read(sender)
+	for i := len(data) + 1;i < 65;i++{
+		sender[i] = 1
+	}
+
+	//res := crc(sender)
+	//sender = append(sender, res)
+
+	_, err := conn.Write(sender)
 	if !checkSendErr(err){
 		return false
 	}

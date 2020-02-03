@@ -41,11 +41,16 @@ func getFileBytes(file *os.File, bytes chan []byte)  {
 	for i := int64(0); i < size;i += 64{
 		_, _ = file.Seek(i, 0)
 		if size - i < 64{
+			fmt.Println(size - i)
 			ctx = make([]byte, size - i)
 		}else{
 			ctx = make([]byte, 64)
 		}
 		_, err = file.Read(ctx)
+		if len(ctx) > 64{
+			fmt.Println(len(ctx))
+			panic("too big")
+		}
 		if err != nil{
 			return
 		}

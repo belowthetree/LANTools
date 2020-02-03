@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+var ch = make(chan []byte, 10)
+
 func main() {
 	fmt.Println("开始启动！")
 	LocalIps := GetIntranetIp()
