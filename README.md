@@ -1,6 +1,8 @@
 # LANTools
 > 学习 golang 练手小项目
 
+![](doc/image.png)
+
 ## Usage
 接收方输入 accept 进入待接收状态，发送方输入 send
 
