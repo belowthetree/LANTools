@@ -36,3 +36,11 @@ func LsFile() {
 func LsDir() {
 	Ls(true)
 }
+
+// 显示功能
+func listFunc()  {
+	fmt.Println("以下是本程序指令")
+	for name := range doc{
+		fmt.Println("	" + name)
+	}
+}

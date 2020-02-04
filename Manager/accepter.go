@@ -8,7 +8,7 @@ import (
 )
 
 func Accept() bool {
-	host, _ := net.ResolveTCPAddr("tcp4", "0.0.0.0" + port)
+	host, _ := net.ResolveTCPAddr("tcp4", "0.0.0.0" + filePort)
 	fmt.Println("监听：", host.IP, host.Port)
 	listener, err := net.ListenTCP("tcp", host)
 	if err != nil {
