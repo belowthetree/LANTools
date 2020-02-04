@@ -8,7 +8,7 @@ import (
 )
 
 func Send(filename string, ip string) bool {
-	host, _ := net.ResolveTCPAddr("tcp4", ip + port)
+	host, _ := net.ResolveTCPAddr("tcp4", ip + filePort)
 	client, err := net.DialTCP("tcp", nil, host)
 	if err != nil {
 		color.Red("连接对方主机失败", err)

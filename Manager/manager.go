@@ -12,7 +12,7 @@ type GUI struct {
 	func_list map[string]func()
 }
 
-var port string = ":10240"
+var filePort string = ":10240"
 
 var doc = map[string]string{
 	"ls_file" : "显示当前目录文件",
